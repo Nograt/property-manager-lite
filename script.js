@@ -81,6 +81,7 @@ function renderProperties() {
     const rent = document.createElement("p");
     const tenantInfo = document.createElement("p");
     const hr = document.createElement("hr");
+    const disengageTenant = document.createElement("button");
 
     name.textContent = `Nazwa: ${property.name}`;
     address.textContent = `Adres: ${property.address}`;
@@ -96,6 +97,14 @@ function renderProperties() {
       } else {
         tenantInfo.textContent = "Najemca nieznaleziony";
       }
+      disengageTenant.textContent = "Odłącz najemcę";
+      disengageTenant.addEventListener("click", () => {
+        property.tenantId = null;
+        renderProperties();
+        renderAssignForm();
+        message.textContent = "Najemca odłączony";
+      });
+      card.appendChild(disengageTenant);
     }
 
     card.appendChild(name);
@@ -142,35 +151,44 @@ function renderAssignForm() {
     propertySelect.appendChild(option);
   });
 
-  tenants.forEach((tenant) =>{
+  tenants.forEach((tenant) => {
     const option = document.createElement("option");
     option.textContent = `${tenant.name}`;
     option.value = tenant.id;
     tenantSelect.appendChild(option);
-  })
+  });
 }
 
-function assignTenantToProperty(){
+function assignTenantToProperty() {
+  const propertyId = propertySelect.value;
+  const tenantId = tenantSelect.value;
 
-    const propertyId = propertySelect.value;
-    const tenantId = tenantSelect.value;
+  const foundProperty = properties.find(
+    (property) => property.id === propertyId,
+  );
+  if (foundProperty) {
+    foundProperty.tenantId = tenantId;
+  } else {
+    message.textContent = "Nie znaleziono mieszkania";
+    return;
+  }
 
-    const findedProperty = properties.find(property => property.id === propertyId);
+  const isTenantAlreadyAssigned = properties.some(
+    (property) => property.tenantId === tenantId,
+  );
 
-    if(findedProperty){
-        findedProperty.tenantId = tenantId;
-    }else{
-        message.textContent = "Nie znaleziono najemcy";
-        return;
-    }
+  if (isTenantAlreadyAssigned) {
+    message.textContent = `Ten najemca jest już przypisany do mieszkania`;
+    return;
+  }
 
-    renderProperties();
+  renderProperties();
+  renderAssignForm();
 
-    message.textContent = "Najemca przypisany";
-
+  message.textContent = "Najemca przypisany";
 }
 
-assignTenant.addEventListener("click", assignTenantToProperty)
+assignTenant.addEventListener("click", assignTenantToProperty);
 
 renderAssignForm();
 renderProperties();
