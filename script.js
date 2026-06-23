@@ -16,45 +16,6 @@ const tenantPhone = document.getElementById("tenantPhone");
 const tenantEmail = document.getElementById("tenantEmail");
 const addTenant = document.getElementById("addTenant");
 
-function addNewTenant() {
-  if (tenantName.value.trim() === "") {
-    message.textContent = "Podaj imię oraz nazwisko";
-    tenantName.focus();
-    return;
-  }
-  if (tenantPhone.value.trim() === "") {
-    message.textContent = "Podaj nr telefonu";
-    tenantPhone.focus();
-    return;
-  }
-  if (tenantEmail.value.trim() === "") {
-    message.textContent = "Podaj email";
-    tenantEmail.focus();
-    return;
-  }
-
-  const newId = crypto.randomUUID();
-
-  tenants.push({
-    id: newId,
-    name: tenantName.value.trim(),
-    phone: tenantPhone.value.trim(),
-    email: tenantEmail.value.trim(),
-  });
-
-  renderTenants();
-  renderAssignForm();
-
-  tenantName.value = "";
-  tenantPhone.value = "";
-  tenantEmail.value = "";
-  
-
-  message.textContent = "Pomyślnie dodano lokatora";
-}
-
-addTenant.addEventListener("click", addNewTenant);
-
 let tenants = [
   {
     id: "t1",
@@ -119,6 +80,44 @@ let properties = [
     tenantId: "t3",
   },
 ];
+
+function addNewTenant() {
+  if (tenantName.value.trim() === "") {
+    message.textContent = "Podaj imię oraz nazwisko";
+    tenantName.focus();
+    return;
+  }
+  if (tenantPhone.value.trim() === "") {
+    message.textContent = "Podaj nr telefonu";
+    tenantPhone.focus();
+    return;
+  }
+  if (tenantEmail.value.trim() === "") {
+    message.textContent = "Podaj email";
+    tenantEmail.focus();
+    return;
+  }
+
+  const newId = crypto.randomUUID();
+
+  tenants.push({
+    id: newId,
+    name: tenantName.value.trim(),
+    phone: tenantPhone.value.trim(),
+    email: tenantEmail.value.trim(),
+  });
+
+  renderTenants();
+  renderAssignForm();
+
+  tenantName.value = "";
+  tenantPhone.value = "";
+  tenantEmail.value = "";
+
+  message.textContent = "Pomyślnie dodano lokatora";
+}
+
+addTenant.addEventListener("click", addNewTenant);
 
 function addNewProperty() {
   if (propertyName.value.trim() === "") {
@@ -214,14 +213,36 @@ function renderTenants() {
     const phone = document.createElement("p");
     const email = document.createElement("p");
     const hr = document.createElement("hr");
+    const deleteButton = document.createElement("button");
 
     name.textContent = `Imie i Nazwisko: ${tenant.name}`;
     phone.textContent = `Nr tel.: ${tenant.phone}`;
     email.textContent = `email: ${tenant.email}`;
 
+    deleteButton.textContent = "Usuń najemcę";
+
+    deleteButton.addEventListener("click", () => {
+      const isAssigned = properties.some(
+        (property) => property.tenantId === tenant.id,
+      );
+
+      if (isAssigned) {
+        alert("Nie możesz usunąć przypisanego najemcy");
+        return;
+      } else {
+        tenants = tenants.filter(
+          (tenantFilter) => tenantFilter.id !== tenant.id,
+        );
+        renderTenants();
+        renderAssignForm();
+        message.textContent = "Najemca usunięty";
+      }
+    });
+
     card.appendChild(name);
     card.appendChild(phone);
     card.appendChild(email);
+    card.appendChild(deleteButton);
     card.appendChild(hr);
 
     tenantsList.appendChild(card);
