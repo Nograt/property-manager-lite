@@ -6,6 +6,50 @@ const propertySelect = document.getElementById("propertySelect");
 const tenantSelect = document.getElementById("tenantSelect");
 const assignTenant = document.getElementById("assignTenant");
 
+const propertyName = document.getElementById("propertyName");
+const propertyAddress = document.getElementById("propertyAddress");
+const propertyRent = document.getElementById("propertyRent");
+const addProperty = document.getElementById("addProperty");
+
+function addNewProperty() {
+  if (propertyName.value.trim() === "") {
+    message.textContent = "Nazwa nie może być pusta";
+    propertyName.focus();
+    return;
+  }
+  if (propertyAddress.value.trim() === "") {
+    message.textContent = "Adres nie może być pusty";
+    propertyAddress.focus();
+    return;
+  }
+  if (Number(propertyRent.value) <= 0) {
+    message.textContent = "Czynsz musi być większy od 0";
+    propertyRent.focus();
+    return;
+  }
+
+  const newId = crypto.randomUUID();
+
+  properties.push({
+    id: `${newId}`,
+    name: propertyName.value.trim(),
+    address: propertyAddress.value.trim(),
+    rent: Number(propertyRent.value),
+    tenantId: null,
+  });
+
+  renderProperties();
+  renderAssignForm();
+
+  propertyName.value = "";
+  propertyAddress.value = "";
+  propertyRent.value = "";
+
+  message.textContent = "Mieszkanie dodane";
+}
+
+addProperty.addEventListener("click", addNewProperty);
+
 let tenants = [
   {
     id: "t1",
