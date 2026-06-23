@@ -144,32 +144,60 @@ function renderAssignForm() {
   propertySelect.replaceChildren();
   tenantSelect.replaceChildren();
 
-  properties.forEach((property) => {
-    const option = document.createElement("option");
-    option.textContent = `${property.name} | ${property.address}`;
-    option.value = property.id;
-    propertySelect.appendChild(option);
+  const availableProperties = properties.filter(
+    (property) => property.tenantId === null,
+  );
+
+  const availableTenants = tenants.filter((tenant) => {
+    const isAsigned = properties.some(
+      (property) => property.tenantId === tenant.id,
+    );
+    return !isAsigned;
   });
 
-  tenants.forEach((tenant) => {
+  let canAssign = true;
+
+  if (availableProperties.length === 0) {
     const option = document.createElement("option");
-    option.textContent = `${tenant.name}`;
-    option.value = tenant.id;
+    option.textContent = "Brak wolnych mieszkań";
+    option.value = "";
+    propertySelect.appendChild(option);
+
+    canAssign = false;
+  } else {
+    availableProperties.forEach((property) => {
+      const option = document.createElement("option");
+      option.textContent = `${property.name} | ${property.address}`;
+      option.value = property.id;
+      propertySelect.appendChild(option);
+    });
+  }
+
+  if (availableTenants.length === 0) {
+    const option = document.createElement("option");
+    option.textContent = "Brak wolnych najemców";
+    option.value = "";
     tenantSelect.appendChild(option);
-  });
+
+    canAssign = false;
+  } else {
+    availableTenants.forEach((tenant) => {
+      const option = document.createElement("option");
+      option.textContent = tenant.name;
+      option.value = tenant.id;
+      tenantSelect.appendChild(option);
+    });
+  }
+
+  assignTenant.disabled = !canAssign;
 }
 
 function assignTenantToProperty() {
   const propertyId = propertySelect.value;
   const tenantId = tenantSelect.value;
 
-  const foundProperty = properties.find(
-    (property) => property.id === propertyId,
-  );
-  if (foundProperty) {
-    foundProperty.tenantId = tenantId;
-  } else {
-    message.textContent = "Nie znaleziono mieszkania";
+  if (propertyId === "" || tenantId === "") {
+    message.textContent = "Brak dostępnego mieszkania albo najemcy";
     return;
   }
 
@@ -179,6 +207,22 @@ function assignTenantToProperty() {
 
   if (isTenantAlreadyAssigned) {
     message.textContent = `Ten najemca jest już przypisany do mieszkania`;
+    return;
+  }
+
+  const foundTenant = tenants.find((tenant) => tenant.id === tenantId);
+  if (!foundTenant) {
+    message.textContent = "Nie znaleziono najemcy";
+    return;
+  }
+
+  const foundProperty = properties.find(
+    (property) => property.id === propertyId,
+  );
+  if (foundProperty) {
+    foundProperty.tenantId = tenantId;
+  } else {
+    message.textContent = "Nie znaleziono mieszkania";
     return;
   }
 
