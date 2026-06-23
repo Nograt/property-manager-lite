@@ -2,6 +2,10 @@ const propertiesList = document.getElementById("propertiesList");
 const tenantsList = document.getElementById("tenantsList");
 const message = document.getElementById("message");
 
+const propertySelect = document.getElementById("propertySelect");
+const tenantSelect = document.getElementById("tenantSelect");
+const assignTenant = document.getElementById("assignTenant");
+
 let tenants = [
   {
     id: "t1",
@@ -104,31 +108,70 @@ function renderProperties() {
   }
 }
 
-function renderTenants(){
+function renderTenants() {
+  tenantsList.replaceChildren();
 
-    tenantsList.replaceChildren();
+  for (const tenant of tenants) {
+    const card = document.createElement("div");
+    const name = document.createElement("p");
+    const phone = document.createElement("p");
+    const email = document.createElement("p");
+    const hr = document.createElement("hr");
 
-    for(const tenant of tenants){
+    name.textContent = `Imie i Nazwisko: ${tenant.name}`;
+    phone.textContent = `Nr tel.: ${tenant.phone}`;
+    email.textContent = `email: ${tenant.email}`;
 
-        const card = document.createElement("div");
-        const name = document.createElement("p");
-        const phone = document.createElement("p");
-        const email = document.createElement("p");
-        const hr = document.createElement("hr");
+    card.appendChild(name);
+    card.appendChild(phone);
+    card.appendChild(email);
+    card.appendChild(hr);
 
-        name.textContent = `Imie i Nazwisko: ${tenant.name}`;
-        phone.textContent = `Nr tel.: ${tenant.phone}`;
-        email.textContent = `email: ${tenant.email}`;
-        
-        card.appendChild(name);
-        card.appendChild(phone);
-        card.appendChild(email);
-        card.appendChild(hr);
-
-        tenantsList.appendChild(card);
-    }
-    
+    tenantsList.appendChild(card);
+  }
 }
 
+function renderAssignForm() {
+  propertySelect.replaceChildren();
+  tenantSelect.replaceChildren();
+
+  properties.forEach((property) => {
+    const option = document.createElement("option");
+    option.textContent = `${property.name} | ${property.address}`;
+    option.value = property.id;
+    propertySelect.appendChild(option);
+  });
+
+  tenants.forEach((tenant) =>{
+    const option = document.createElement("option");
+    option.textContent = `${tenant.name}`;
+    option.value = tenant.id;
+    tenantSelect.appendChild(option);
+  })
+}
+
+function assignTenantToProperty(){
+
+    const propertyId = propertySelect.value;
+    const tenantId = tenantSelect.value;
+
+    const findedProperty = properties.find(property => property.id === propertyId);
+
+    if(findedProperty){
+        findedProperty.tenantId = tenantId;
+    }else{
+        message.textContent = "Nie znaleziono najemcy";
+        return;
+    }
+
+    renderProperties();
+
+    message.textContent = "Najemca przypisany";
+
+}
+
+assignTenant.addEventListener("click", assignTenantToProperty)
+
+renderAssignForm();
 renderProperties();
 renderTenants();
