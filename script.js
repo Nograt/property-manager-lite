@@ -11,44 +11,49 @@ const propertyAddress = document.getElementById("propertyAddress");
 const propertyRent = document.getElementById("propertyRent");
 const addProperty = document.getElementById("addProperty");
 
-function addNewProperty() {
-  if (propertyName.value.trim() === "") {
-    message.textContent = "Nazwa nie może być pusta";
-    propertyName.focus();
+const tenantName = document.getElementById("tenantName");
+const tenantPhone = document.getElementById("tenantPhone");
+const tenantEmail = document.getElementById("tenantEmail");
+const addTenant = document.getElementById("addTenant");
+
+function addNewTenant() {
+  if (tenantName.value.trim() === "") {
+    message.textContent = "Podaj imię oraz nazwisko";
+    tenantName.focus();
     return;
   }
-  if (propertyAddress.value.trim() === "") {
-    message.textContent = "Adres nie może być pusty";
-    propertyAddress.focus();
+  if (tenantPhone.value.trim() === "") {
+    message.textContent = "Podaj nr telefonu";
+    tenantPhone.focus();
     return;
   }
-  if (Number(propertyRent.value) <= 0) {
-    message.textContent = "Czynsz musi być większy od 0";
-    propertyRent.focus();
+  if (tenantEmail.value.trim() === "") {
+    message.textContent = "Podaj email";
+    tenantEmail.focus();
     return;
   }
 
   const newId = crypto.randomUUID();
 
-  properties.push({
-    id: `${newId}`,
-    name: propertyName.value.trim(),
-    address: propertyAddress.value.trim(),
-    rent: Number(propertyRent.value),
-    tenantId: null,
+  tenants.push({
+    id: newId,
+    name: tenantName.value.trim(),
+    phone: tenantPhone.value.trim(),
+    email: tenantEmail.value.trim(),
   });
 
-  renderProperties();
+  renderTenants();
   renderAssignForm();
 
-  propertyName.value = "";
-  propertyAddress.value = "";
-  propertyRent.value = "";
+  tenantName.value = "";
+  tenantPhone.value = "";
+  tenantEmail.value = "";
+  
 
-  message.textContent = "Mieszkanie dodane";
+  message.textContent = "Pomyślnie dodano lokatora";
 }
 
-addProperty.addEventListener("click", addNewProperty);
+addTenant.addEventListener("click", addNewTenant);
 
 let tenants = [
   {
@@ -114,6 +119,45 @@ let properties = [
     tenantId: "t3",
   },
 ];
+
+function addNewProperty() {
+  if (propertyName.value.trim() === "") {
+    message.textContent = "Nazwa nie może być pusta";
+    propertyName.focus();
+    return;
+  }
+  if (propertyAddress.value.trim() === "") {
+    message.textContent = "Adres nie może być pusty";
+    propertyAddress.focus();
+    return;
+  }
+  if (Number(propertyRent.value) <= 0) {
+    message.textContent = "Czynsz musi być większy od 0";
+    propertyRent.focus();
+    return;
+  }
+
+  const newId = crypto.randomUUID();
+
+  properties.push({
+    id: `${newId}`,
+    name: propertyName.value.trim(),
+    address: propertyAddress.value.trim(),
+    rent: Number(propertyRent.value),
+    tenantId: null,
+  });
+
+  renderProperties();
+  renderAssignForm();
+
+  propertyName.value = "";
+  propertyAddress.value = "";
+  propertyRent.value = "";
+
+  message.textContent = "Mieszkanie dodane";
+}
+
+addProperty.addEventListener("click", addNewProperty);
 
 function renderProperties() {
   propertiesList.replaceChildren();
