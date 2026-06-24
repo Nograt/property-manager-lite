@@ -1,78 +1,184 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proprty menager</title>
-</head>
-<body>
-<h1>Property Manager Lite</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Property Manager</title>
 
-<section>
-  <h2>Assign tenant</h2>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="min-h-screen bg-slate-100 text-slate-900">
+    <main class="mx-auto max-w-7xl p-6">
+      <h1 class="mb-6 text-3xl font-bold tracking-tight">
+        Property Manager Lite
+      </h1>
 
-  <select id="propertySelect"></select>
-  <select id="tenantSelect"></select>
+      <p
+        id="message"
+        class="hidden fixed left-1/2 top-4 z-50 min-h-10 w-[90%] max-w-xl -translate-x-1/2 rounded-lg bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-lg border border-red-300 ring-2 ring-red-300 shadow-lg shadow-red-100"
+      ></p>
 
-  <button id="assignTenant">Przypisz najemcę</button>
-</section>
-<p id="message"></p>
+      <section class="mb-6 rounded-xl bg-white p-5 shadow-sm">
+        <h2 class="mb-4 text-xl font-semibold">Assign tenant</h2>
 
-<section>
-  <h2>Add property</h2>
+        <div class="flex flex-wrap gap-3">
+          <select
+            id="propertySelect"
+            class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          ></select>
 
-  <input id="propertyName" placeholder="Property name">
-  <input id="propertyAddress" placeholder="Address">
-  <input id="propertyRent" type="number" placeholder="Monthly rent">
+          <select
+            id="tenantSelect"
+            class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          ></select>
 
-  <button id="addProperty">Add property</button>
-</section>
+          <button
+            id="assignTenant"
+            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+          >
+            Przypisz najemcę
+          </button>
+        </div>
+      </section>
 
-<section>
-  <h2>Add tenant</h2>
+      <div class="mb-6 grid gap-6 md:grid-cols-2">
+        <section class="rounded-xl bg-white p-5 shadow-sm">
+          <h2 class="mb-4 text-xl font-semibold">Add property</h2>
 
-  <input id="tenantName" placeholder="Full name">
-  <input id="tenantPhone" placeholder="Phone">
-  <input id="tenantEmail" placeholder="Email">
+          <div class="space-y-3">
+            <input
+              id="propertyName"
+              class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              placeholder="Property name"
+            />
 
-  <button id="addTenant">Add tenant</button>
-</section>
+            <input
+              id="propertyAddress"
+              class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              placeholder="Address"
+            />
 
-<section>
-  <h2>Dashboard</h2>
+            <input
+              id="propertyRent"
+              type="number"
+              class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              placeholder="Monthly rent"
+            />
 
-  <div style="display: flex; gap: 10px;">
-    <p>Wszystkie nieruchomości: <span id="totalProperties">0</span></p>
-    <p>Zajęte nieruchomości: <span id="occupiedProperties">0</span></p>
-    <p>Wolne nieruchomości: <span id="freeProperties">0</span></p>
-    <p>Suma czynszów: <span id="totalRent">0</span> zł</p>
-  </div>
-</section>
+            <button
+              id="addProperty"
+              class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+            >
+              Add property
+            </button>
+          </div>
+        </section>
 
-<section>
-  <h2>Properties</h2>
+        <section class="rounded-xl bg-white p-5 shadow-sm">
+          <h2 class="mb-4 text-xl font-semibold">Add tenant</h2>
 
-  <hr>
-  <h4>Filter properties</h4>
-  
-  <button id="showAllProperties">Wszystkie</button>
-  <button id="showFreeProperties">Wolne</button>
-  <button id="showOccupiedProperties">Zajęte</button>
-    <br><br>
-  <input id="propertySearch" placeholder="Szukaj po nazwie lub adresie" style="width: 300px;">
-    <hr>
-  <div id="propertiesList"></div>
-</section>
+          <div class="space-y-3">
+            <input
+              id="tenantName"
+              class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              placeholder="Full name"
+            />
 
-<section>
-  <h2>Tenants</h2>
+            <input
+              id="tenantPhone"
+              class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              placeholder="Phone"
+            />
 
-  <input id="tenantSearch" placeholder="Szukaj najemcy po imieniu, telefonie lub emailu" style="width: 300px;">
-  <div id="tenantsList"></div>
-</section>
+            <input
+              id="tenantEmail"
+              class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              placeholder="Email"
+            />
 
+            <button
+              id="addTenant"
+              class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+            >
+              Add tenant
+            </button>
+          </div>
+        </section>
+      </div>
+      <section class="mb-6">
+        <h2 class="mb-4 text-xl font-semibold">Dashboard</h2>
 
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="rounded-xl bg-white p-5 shadow-sm">
+            <p class="text-sm text-slate-500">All properties</p>
+            <p id="totalProperties" class="mt-2 text-3xl font-bold">0</p>
+          </div>
 
-<script src="script.js"></script>
-</body>
+          <div class="rounded-xl bg-white p-5 shadow-sm">
+            <p class="text-sm text-slate-500">Occupied properties</p>
+            <p id="occupiedProperties" class="mt-2 text-3xl font-bold">0</p>
+          </div>
+
+          <div class="rounded-xl bg-white p-5 shadow-sm">
+            <p class="text-sm text-slate-500">Free properties</p>
+            <p id="freeProperties" class="mt-2 text-3xl font-bold">0</p>
+          </div>
+
+          <div class="rounded-xl bg-white p-5 shadow-sm">
+            <p class="text-sm text-slate-500">Total rent</p>
+            <p class="mt-2 text-3xl font-bold">
+              <span id="totalRent">0</span> zł
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="mb-4 mt-6 text-2xl font-bold tracking-tight">Properties</h2>
+
+        <hr class="text-slate-200" />
+        <h4 class="text-large font-bold">Filter properties</h4>
+        <div class="mb-5 flex flex-wrap gap-3">
+          <button
+            id="showAllProperties"
+            class="rounded-lg bg-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-400 mt-2"
+          >
+            All
+          </button>
+          <button
+            id="showFreeProperties"
+            class="rounded-lg bg-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-400 mt-2"
+          >
+            Free
+          </button>
+          <button
+            id="showOccupiedProperties"
+            class="rounded-lg bg-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-400 mt-2"
+          >
+            Occupied
+          </button>
+        </div>
+        <input
+          id="propertySearch"
+          placeholder="Search by name or address"
+          class="mb-4 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-100 focus:ring-2 focus:ring-blue-100"
+        />
+        <hr class="text-slate-200" />
+        <div id="propertiesList"></div>
+      </section>
+
+      <section>
+        <h2 class="mb-4 mt-6 text-2xl font-bold tracking-tight">Tenants</h2>
+
+        <input
+          id="tenantSearch"
+          placeholder="Search tenant by name, phone, or email"
+          class="mb-4 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-100 focus:ring-2 focus:ring-blue-100"
+        />
+        <div id="tenantsList"></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
 </html>

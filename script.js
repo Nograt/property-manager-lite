@@ -133,17 +133,17 @@ function renderStats() {
 
 function addNewTenant() {
   if (tenantName.value.trim() === "") {
-    setMessage("Podaj imię oraz nazwisko");
+    setMessage("Enter full name");
     tenantName.focus();
     return;
   }
   if (tenantPhone.value.trim() === "") {
-    setMessage("Podaj nr telefonu");
+    setMessage("Enter phone number");
     tenantPhone.focus();
     return;
   }
   if (tenantEmail.value.trim() === "") {
-    setMessage("Podaj email");
+    setMessage("Enter email");
     tenantEmail.focus();
     return;
   }
@@ -164,24 +164,24 @@ function addNewTenant() {
 
   clearTenantForm();
 
-  setMessage("Pomyślnie dodano lokatora");
+  setMessage("Tenant added successfully");
 }
 
 addTenant.addEventListener("click", addNewTenant);
 
 function addNewProperty() {
   if (propertyName.value.trim() === "") {
-    setMessage("Nazwa nie może być pusta");
+    setMessage("Property name cannot be empty");
     propertyName.focus();
     return;
   }
   if (propertyAddress.value.trim() === "") {
-    setMessage("Adres nie może być pusty");
+    setMessage("Address cannot be empty");
     propertyAddress.focus();
     return;
   }
   if (Number(propertyRent.value) <= 0) {
-    setMessage("Czynsz musi być większy od 0");
+    setMessage("Rent must be greater than 0");
     propertyRent.focus();
     return;
   }
@@ -203,7 +203,7 @@ function addNewProperty() {
 
   clearPropertyForm();
 
-  setMessage("Mieszkanie dodane");
+  setMessage("Property added successfully");
 }
 
 function clearPropertyForm() {
@@ -256,7 +256,6 @@ function renderProperties() {
     const address = document.createElement("p");
     const rent = document.createElement("p");
     const tenantInfo = document.createElement("p");
-    const hr = document.createElement("hr");
     const disengageTenant = document.createElement("button");
     const deleteButton = document.createElement("button");
 
@@ -264,19 +263,26 @@ function renderProperties() {
     address.textContent = `Adres: ${property.address}`;
     rent.textContent = `Czynsz: ${property.rent} zł`;
 
+    card.appendChild(name);
+    card.appendChild(address);
+    card.appendChild(rent);
+    card.appendChild(tenantInfo);
+
     if (property.tenantId === null) {
-      tenantInfo.textContent = "Brak najemcy";
+      tenantInfo.textContent = "No tenant";
     } else {
       const tenant = findTenantById(property.tenantId);
 
       if (tenant) {
-        tenantInfo.textContent = `Najemca: ${tenant.name}`;
+        tenantInfo.textContent = `Tenant: ${tenant.name}`;
       } else {
-        tenantInfo.textContent = "Najemca nieznaleziony";
+        tenantInfo.textContent = "Tenant not found";
       }
-      disengageTenant.textContent = "Odłącz najemcę";
+      disengageTenant.textContent = "Unassign tenant";
       disengageTenant.addEventListener("click", () => {
-        const confirmed = confirm("Czy na pewno chcesz odłączyć najemcę?");
+        const confirmed = confirm(
+          "Are you sure you want to unassign this tenant?",
+        );
         if (!confirmed) {
           return;
         }
@@ -287,15 +293,17 @@ function renderProperties() {
         renderProperties();
         renderAssignForm();
         renderStats();
-        setMessage("Najemca odłączony");
+        setMessage("Tenant unassigned");
       });
       card.appendChild(disengageTenant);
     }
 
-    deleteButton.textContent = "Usuń nieruchomość";
+    deleteButton.textContent = "Delete property";
 
     deleteButton.addEventListener("click", () => {
-      const confirmed = confirm("Czy na pewno chcesz usunąć nieruchomość?");
+      const confirmed = confirm(
+        "Are you sure you want to delete this property?",
+      );
 
       if (!confirmed) {
         return;
@@ -308,14 +316,18 @@ function renderProperties() {
       renderProperties();
       renderAssignForm();
       renderStats();
-      setMessage("Nieruchomość usunięta");
+      setMessage("Property deleted");
     });
+
+    deleteButton.className =
+      "rounded-lg bg-amber-200 px-3 py-1 mx-2 text-sm font-medium text-white hover:bg-amber-300";
+    disengageTenant.className =
+      "rounded-lg bg-red-200 px-3 py-1 text-sm font-medium text-white hover:bg-red-300 ";
+
     card.appendChild(deleteButton);
-    card.appendChild(name);
-    card.appendChild(address);
-    card.appendChild(rent);
-    card.appendChild(tenantInfo);
-    card.appendChild(hr);
+
+    card.className =
+      "rounded-lg border border-slate-200 bg-white p-4 shadow-sm space-y-1 mt-5";
 
     propertiesList.appendChild(card);
   }
@@ -351,23 +363,24 @@ function renderTenants() {
     const name = document.createElement("p");
     const phone = document.createElement("p");
     const email = document.createElement("p");
-    const hr = document.createElement("hr");
     const deleteButton = document.createElement("button");
 
-    name.textContent = `Imie i Nazwisko: ${tenant.name}`;
-    phone.textContent = `Nr tel.: ${tenant.phone}`;
-    email.textContent = `email: ${tenant.email}`;
+    name.textContent = `Full name: ${tenant.name}`;
+    phone.textContent = `Phone: ${tenant.phone}`;
+    email.textContent = `Email: ${tenant.email}`;
 
-    deleteButton.textContent = "Usuń najemcę";
+    deleteButton.textContent = "Delete tenant";
 
     deleteButton.addEventListener("click", () => {
       const isAssigned = isTenantAssigned(tenant.id);
 
       if (isAssigned) {
-        setMessage("Nie możesz usunąć przypisanego najemcy");
+        setMessage("You cannot delete an assigned tenant");
         return;
       } else {
-        const confirmed = confirm("Czy na pewno chcesz usunąć najemcę?");
+        const confirmed = confirm(
+          "Are you sure you want to delete this tenant?",
+        );
         if (!confirmed) {
           return;
         }
@@ -379,15 +392,20 @@ function renderTenants() {
         renderTenants();
         renderAssignForm();
         renderStats();
-        setMessage("Najemca usunięty");
+        setMessage("Tenant deleted");
       }
     });
+
+    deleteButton.className =
+      "rounded-xl bg-red-200 px-3 py-1 text-sm  font-medium text-white hover:bg-red-300 mt-1";
 
     card.appendChild(name);
     card.appendChild(phone);
     card.appendChild(email);
     card.appendChild(deleteButton);
-    card.appendChild(hr);
+
+    card.className =
+      "rounded-xl border border-slate-200 bg-white p-4 shadow-sm space-y-1 mt-5";
 
     tenantsList.appendChild(card);
   }
@@ -410,7 +428,7 @@ function renderAssignForm() {
 
   if (availableProperties.length === 0) {
     const option = document.createElement("option");
-    option.textContent = "Brak wolnych mieszkań";
+    option.textContent = "No free properties";
     option.value = "";
     propertySelect.appendChild(option);
 
@@ -426,7 +444,7 @@ function renderAssignForm() {
 
   if (availableTenants.length === 0) {
     const option = document.createElement("option");
-    option.textContent = "Brak wolnych najemców";
+    option.textContent = "No available tenants";
     option.value = "";
     tenantSelect.appendChild(option);
 
@@ -448,7 +466,7 @@ function assignTenantToProperty() {
   const tenantId = tenantSelect.value;
 
   if (propertyId === "" || tenantId === "") {
-    setMessage("Brak dostępnego mieszkania albo najemcy");
+    setMessage("No property or tenant available");
     return;
   }
 
@@ -457,13 +475,13 @@ function assignTenantToProperty() {
   );
 
   if (isTenantAlreadyAssigned) {
-    setMessage("Ten najemca jest już przypisany do mieszkania");
+    setMessage("This tenant is already assigned to a property");
     return;
   }
 
   const foundTenant = tenants.find((tenant) => tenant.id === tenantId);
   if (!foundTenant) {
-    setMessage("Nie znaleziono najemcy");
+    setMessage("Tenant not found");
     return;
   }
 
@@ -473,7 +491,7 @@ function assignTenantToProperty() {
   if (foundProperty) {
     foundProperty.tenantId = tenantId;
   } else {
-    setMessage("Nie znaleziono mieszkania");
+    setMessage("Property not found");
     return;
   }
 
@@ -482,11 +500,16 @@ function assignTenantToProperty() {
   renderAssignForm();
   renderStats();
 
-  setMessage("Najemca przypisany");
+  setMessage("Tenant assigned");
 }
 
 function setMessage(textMessage) {
   message.textContent = textMessage;
+  message.classList.remove("hidden");
+
+  setTimeout(() => {
+    message.classList.add("hidden");
+  }, 3000);
 }
 
 assignTenant.addEventListener("click", assignTenantToProperty);
