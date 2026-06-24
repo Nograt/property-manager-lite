@@ -133,17 +133,17 @@ function renderStats() {
 
 function addNewTenant() {
   if (tenantName.value.trim() === "") {
-    message.textContent = "Podaj imię oraz nazwisko";
+    setMessage("Podaj imię oraz nazwisko");
     tenantName.focus();
     return;
   }
   if (tenantPhone.value.trim() === "") {
-    message.textContent = "Podaj nr telefonu";
+    setMessage("Podaj nr telefonu");
     tenantPhone.focus();
     return;
   }
   if (tenantEmail.value.trim() === "") {
-    message.textContent = "Podaj email";
+    setMessage("Podaj email");
     tenantEmail.focus();
     return;
   }
@@ -164,24 +164,24 @@ function addNewTenant() {
 
   clearTenantForm();
 
-  message.textContent = "Pomyślnie dodano lokatora";
+  setMessage("Pomyślnie dodano lokatora");
 }
 
 addTenant.addEventListener("click", addNewTenant);
 
 function addNewProperty() {
   if (propertyName.value.trim() === "") {
-    message.textContent = "Nazwa nie może być pusta";
+    setMessage("Nazwa nie może być pusta");
     propertyName.focus();
     return;
   }
   if (propertyAddress.value.trim() === "") {
-    message.textContent = "Adres nie może być pusty";
+    setMessage("Adres nie może być pusty");
     propertyAddress.focus();
     return;
   }
   if (Number(propertyRent.value) <= 0) {
-    message.textContent = "Czynsz musi być większy od 0";
+    setMessage("Czynsz musi być większy od 0");
     propertyRent.focus();
     return;
   }
@@ -203,7 +203,7 @@ function addNewProperty() {
 
   clearPropertyForm();
 
-  message.textContent = "Mieszkanie dodane";
+  setMessage("Mieszkanie dodane");
 }
 
 function clearPropertyForm() {
@@ -287,7 +287,7 @@ function renderProperties() {
         renderProperties();
         renderAssignForm();
         renderStats();
-        message.textContent = "Najemca odłączony";
+        setMessage("Najemca odłączony");
       });
       card.appendChild(disengageTenant);
     }
@@ -308,7 +308,7 @@ function renderProperties() {
       renderProperties();
       renderAssignForm();
       renderStats();
-      message.textContent = "Nieruchomość usunięta";
+      setMessage("Nieruchomość usunięta");
     });
     card.appendChild(deleteButton);
     card.appendChild(name);
@@ -364,7 +364,7 @@ function renderTenants() {
       const isAssigned = isTenantAssigned(tenant.id);
 
       if (isAssigned) {
-        alert("Nie możesz usunąć przypisanego najemcy");
+        setMessage("Nie możesz usunąć przypisanego najemcy");
         return;
       } else {
         const confirmed = confirm("Czy na pewno chcesz usunąć najemcę?");
@@ -379,7 +379,7 @@ function renderTenants() {
         renderTenants();
         renderAssignForm();
         renderStats();
-        message.textContent = "Najemca usunięty";
+        setMessage("Najemca usunięty");
       }
     });
 
@@ -448,7 +448,7 @@ function assignTenantToProperty() {
   const tenantId = tenantSelect.value;
 
   if (propertyId === "" || tenantId === "") {
-    message.textContent = "Brak dostępnego mieszkania albo najemcy";
+    setMessage("Brak dostępnego mieszkania albo najemcy");
     return;
   }
 
@@ -457,13 +457,13 @@ function assignTenantToProperty() {
   );
 
   if (isTenantAlreadyAssigned) {
-    message.textContent = `Ten najemca jest już przypisany do mieszkania`;
+    setMessage("Ten najemca jest już przypisany do mieszkania");
     return;
   }
 
   const foundTenant = tenants.find((tenant) => tenant.id === tenantId);
   if (!foundTenant) {
-    message.textContent = "Nie znaleziono najemcy";
+    setMessage("Nie znaleziono najemcy");
     return;
   }
 
@@ -473,7 +473,7 @@ function assignTenantToProperty() {
   if (foundProperty) {
     foundProperty.tenantId = tenantId;
   } else {
-    message.textContent = "Nie znaleziono mieszkania";
+    setMessage("Nie znaleziono mieszkania");
     return;
   }
 
@@ -482,7 +482,11 @@ function assignTenantToProperty() {
   renderAssignForm();
   renderStats();
 
-  message.textContent = "Najemca przypisany";
+  setMessage("Najemca przypisany");
+}
+
+function setMessage(textMessage) {
+  message.textContent = textMessage;
 }
 
 assignTenant.addEventListener("click", assignTenantToProperty);
@@ -506,7 +510,7 @@ propertySearch.addEventListener("input", () => {
   renderProperties();
 });
 
-tenantSearch.addEventListener("input", () =>{
+tenantSearch.addEventListener("input", () => {
   renderTenants();
 });
 
