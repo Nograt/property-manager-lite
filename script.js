@@ -275,6 +275,11 @@ function renderProperties() {
       }
       disengageTenant.textContent = "Odłącz najemcę";
       disengageTenant.addEventListener("click", () => {
+        const confirmed = confirm("Czy na pewno chcesz odłączyć najemcę?");
+        if (!confirmed) {
+          return;
+        }
+
         property.tenantId = null;
 
         saveData();
@@ -289,6 +294,12 @@ function renderProperties() {
     deleteButton.textContent = "Usuń nieruchomość";
 
     deleteButton.addEventListener("click", () => {
+      const confirmed = confirm("Czy na pewno chcesz usunąć nieruchomość?");
+
+      if (!confirmed) {
+        return;
+      }
+
       properties = properties.filter(
         (propertyFilter) => propertyFilter.id !== property.id,
       );
@@ -341,6 +352,11 @@ function renderTenants() {
         alert("Nie możesz usunąć przypisanego najemcy");
         return;
       } else {
+        const confirmed = confirm("Czy na pewno chcesz usunąć najemcę?");
+        if (!confirmed) {
+          return;
+        }
+
         tenants = tenants.filter(
           (tenantFilter) => tenantFilter.id !== tenant.id,
         );
