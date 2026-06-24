@@ -38,6 +38,10 @@ The project focuses on data relationships, DOM rendering, localStorage persisten
 * UI polish with Tailwind CSS
 * Basic project structure and Git workflow
 
+## Screenshot
+
+![Property Manager Lite dashboard](assets/screenshot.png)
+
 ## How to run
 
 Open `index.html` in the browser.
