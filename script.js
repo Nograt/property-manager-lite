@@ -21,6 +21,14 @@ const occupiedProperties = document.getElementById("occupiedProperties");
 const freeProperties = document.getElementById("freeProperties");
 const totalRent = document.getElementById("totalRent");
 
+const showAllProperties = document.getElementById("showAllProperties");
+const showFreeProperties = document.getElementById("showFreeProperties");
+const showOccupiedProperties = document.getElementById(
+  "showOccupiedProperties",
+);
+
+let currentPropertyFilter = "all";
+
 let tenants = [
   {
     id: "t1",
@@ -215,7 +223,21 @@ addProperty.addEventListener("click", addNewProperty);
 function renderProperties() {
   propertiesList.replaceChildren();
 
-  for (const property of properties) {
+  let propertiesToRender = [];
+
+  if (currentPropertyFilter === "all") {
+    propertiesToRender = properties;
+  } else if (currentPropertyFilter === "free") {
+    propertiesToRender = properties.filter(
+      (property) => property.tenantId === null,
+    );
+  } else if (currentPropertyFilter === "occupied") {
+    propertiesToRender = properties.filter(
+      (property) => property.tenantId !== null,
+    );
+  }
+
+  for (const property of propertiesToRender) {
     const card = document.createElement("div");
     const name = document.createElement("p");
     const address = document.createElement("p");
@@ -421,6 +443,21 @@ function assignTenantToProperty() {
 }
 
 assignTenant.addEventListener("click", assignTenantToProperty);
+
+showAllProperties.addEventListener("click", () => {
+  currentPropertyFilter = "all";
+  renderProperties();
+});
+
+showFreeProperties.addEventListener("click", () => {
+  currentPropertyFilter = "free";
+  renderProperties();
+});
+
+showOccupiedProperties.addEventListener("click", () => {
+  currentPropertyFilter = "occupied";
+  renderProperties();
+});
 
 loadData();
 
