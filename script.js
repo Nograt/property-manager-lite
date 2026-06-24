@@ -81,6 +81,25 @@ let properties = [
   },
 ];
 
+function saveData() {
+  localStorage.setItem("properties", JSON.stringify(properties));
+  localStorage.setItem("tenants", JSON.stringify(tenants));
+}
+
+function loadData() {
+  const loadedProperties = localStorage.getItem("properties");
+
+  if (loadedProperties) {
+    properties = JSON.parse(loadedProperties);
+  }
+
+  const loadedTenants = localStorage.getItem("tenants");
+
+  if (loadedTenants) {
+    tenants = JSON.parse(loadedTenants);
+  }
+}
+
 function addNewTenant() {
   if (tenantName.value.trim() === "") {
     message.textContent = "Podaj imię oraz nazwisko";
@@ -107,6 +126,7 @@ function addNewTenant() {
     email: tenantEmail.value.trim(),
   });
 
+  saveData();
   renderTenants();
   renderAssignForm();
 
@@ -139,13 +159,14 @@ function addNewProperty() {
   const newId = crypto.randomUUID();
 
   properties.push({
-    id: `${newId}`,
+    id: newId,
     name: propertyName.value.trim(),
     address: propertyAddress.value.trim(),
     rent: Number(propertyRent.value),
     tenantId: null,
   });
 
+  saveData();
   renderProperties();
   renderAssignForm();
 
@@ -188,6 +209,8 @@ function renderProperties() {
       disengageTenant.textContent = "Odłącz najemcę";
       disengageTenant.addEventListener("click", () => {
         property.tenantId = null;
+
+        saveData();
         renderProperties();
         renderAssignForm();
         message.textContent = "Najemca odłączony";
@@ -197,8 +220,11 @@ function renderProperties() {
 
     deleteButton.textContent = "Usuń nieruchomość";
 
-    deleteButton.addEventListener("click",() =>{
-      properties = properties.filter(propertyFilter =>propertyFilter.id !== property.id );
+    deleteButton.addEventListener("click", () => {
+      properties = properties.filter(
+        (propertyFilter) => propertyFilter.id !== property.id,
+      );
+      saveData();
       renderProperties();
       renderAssignForm();
       message.textContent = "Nieruchomość usunięta";
@@ -243,6 +269,7 @@ function renderTenants() {
         tenants = tenants.filter(
           (tenantFilter) => tenantFilter.id !== tenant.id,
         );
+        saveData();
         renderTenants();
         renderAssignForm();
         message.textContent = "Najemca usunięty";
@@ -345,6 +372,7 @@ function assignTenantToProperty() {
     return;
   }
 
+  saveData();
   renderProperties();
   renderAssignForm();
 
@@ -352,6 +380,8 @@ function assignTenantToProperty() {
 }
 
 assignTenant.addEventListener("click", assignTenantToProperty);
+
+loadData();
 
 renderAssignForm();
 renderProperties();
