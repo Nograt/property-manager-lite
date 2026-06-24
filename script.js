@@ -259,9 +259,9 @@ function renderProperties() {
     const disengageTenant = document.createElement("button");
     const deleteButton = document.createElement("button");
 
-    name.textContent = `Nazwa: ${property.name}`;
-    address.textContent = `Adres: ${property.address}`;
-    rent.textContent = `Czynsz: ${property.rent} zł`;
+    name.textContent = `Name: ${property.name}`;
+    address.textContent = `Address: ${property.address}`;
+    rent.textContent = `Rent: ${property.rent} zł`;
 
     card.appendChild(name);
     card.appendChild(address);
