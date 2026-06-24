@@ -26,6 +26,7 @@ const showFreeProperties = document.getElementById("showFreeProperties");
 const showOccupiedProperties = document.getElementById(
   "showOccupiedProperties",
 );
+const propertySearch = document.getElementById("propertySearch");
 
 let currentPropertyFilter = "all";
 
@@ -235,6 +236,17 @@ function renderProperties() {
     propertiesToRender = properties.filter(
       (property) => property.tenantId !== null,
     );
+  }
+
+  const query = propertySearch.value.trim().toLowerCase();
+
+  if (query !== "") {
+    propertiesToRender = propertiesToRender.filter((property) => {
+      return (
+        property.name.toLowerCase().includes(query) ||
+        property.address.toLowerCase().includes(query)
+      );
+    });
   }
 
   for (const property of propertiesToRender) {
@@ -456,6 +468,10 @@ showFreeProperties.addEventListener("click", () => {
 
 showOccupiedProperties.addEventListener("click", () => {
   currentPropertyFilter = "occupied";
+  renderProperties();
+});
+
+propertySearch.addEventListener("input", () => {
   renderProperties();
 });
 
