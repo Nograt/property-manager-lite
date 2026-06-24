@@ -4,6 +4,10 @@ A small Vanilla JavaScript application for managing rental properties and tenant
 
 The project focuses on data relationships, DOM rendering, localStorage persistence, filtering, searching, and basic UI polish with Tailwind CSS.
 
+## Live Demo
+
+[View live project](https://twoj-link.github.io/property-manager-lite/)
+
 ## Features
 
 * Add and delete properties
