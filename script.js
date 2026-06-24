@@ -169,6 +169,7 @@ function renderProperties() {
     const tenantInfo = document.createElement("p");
     const hr = document.createElement("hr");
     const disengageTenant = document.createElement("button");
+    const deleteButton = document.createElement("button");
 
     name.textContent = `Nazwa: ${property.name}`;
     address.textContent = `Adres: ${property.address}`;
@@ -194,6 +195,15 @@ function renderProperties() {
       card.appendChild(disengageTenant);
     }
 
+    deleteButton.textContent = "Usuń nieruchomość";
+
+    deleteButton.addEventListener("click",() =>{
+      properties = properties.filter(propertyFilter =>propertyFilter.id !== property.id );
+      renderProperties();
+      renderAssignForm();
+      message.textContent = "Nieruchomość usunięta";
+    });
+    card.appendChild(deleteButton);
     card.appendChild(name);
     card.appendChild(address);
     card.appendChild(rent);
