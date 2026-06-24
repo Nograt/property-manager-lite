@@ -27,6 +27,7 @@ const showOccupiedProperties = document.getElementById(
   "showOccupiedProperties",
 );
 const propertySearch = document.getElementById("propertySearch");
+const tenantSearch = document.getElementById("tenantSearch");
 
 let currentPropertyFilter = "all";
 
@@ -331,7 +332,21 @@ function findTenantById(tenantId) {
 function renderTenants() {
   tenantsList.replaceChildren();
 
-  for (const tenant of tenants) {
+  let tenantsToRender = tenants;
+
+  const query = tenantSearch.value.trim().toLowerCase();
+
+  if (query !== "") {
+    tenantsToRender = tenantsToRender.filter((tenant) => {
+      return (
+        tenant.name.toLowerCase().includes(query) ||
+        tenant.phone.toLowerCase().includes(query) ||
+        tenant.email.toLowerCase().includes(query)
+      );
+    });
+  }
+
+  for (const tenant of tenantsToRender) {
     const card = document.createElement("div");
     const name = document.createElement("p");
     const phone = document.createElement("p");
@@ -489,6 +504,10 @@ showOccupiedProperties.addEventListener("click", () => {
 
 propertySearch.addEventListener("input", () => {
   renderProperties();
+});
+
+tenantSearch.addEventListener("input", () =>{
+  renderTenants();
 });
 
 loadData();
