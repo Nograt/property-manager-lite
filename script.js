@@ -16,6 +16,12 @@ const tenantPhone = document.getElementById("tenantPhone");
 const tenantEmail = document.getElementById("tenantEmail");
 const addTenant = document.getElementById("addTenant");
 
+
+const totalProperties = document.getElementById("totalProperties");
+const occupiedProperties = document.getElementById("occupiedProperties");
+const freeProperties = document.getElementById("freeProperties");
+const totalRent = document.getElementById("totalRent");
+
 let tenants = [
   {
     id: "t1",
@@ -81,6 +87,7 @@ let properties = [
   },
 ];
 
+
 function saveData() {
   localStorage.setItem("properties", JSON.stringify(properties));
   localStorage.setItem("tenants", JSON.stringify(tenants));
@@ -99,6 +106,22 @@ function loadData() {
     tenants = JSON.parse(loadedTenants);
   }
 }
+
+function renderStats() {
+  const total = properties.length;
+  const occupied = properties.filter(property => property.tenantId !== null).length;
+  const propertiesFree = total - occupied;
+  const rentSum = properties.reduce((sum,property) =>{
+    return sum + property.rent;
+  },0);
+
+  totalProperties.textContent = total;
+  occupiedProperties.textContent = occupied;
+  freeProperties.textContent = propertiesFree;
+  totalRent.textContent = rentSum;
+
+}
+
 
 function addNewTenant() {
   if (tenantName.value.trim() === "") {
@@ -129,6 +152,7 @@ function addNewTenant() {
   saveData();
   renderTenants();
   renderAssignForm();
+  renderStats();
 
   tenantName.value = "";
   tenantPhone.value = "";
@@ -169,6 +193,7 @@ function addNewProperty() {
   saveData();
   renderProperties();
   renderAssignForm();
+  renderStats();
 
   propertyName.value = "";
   propertyAddress.value = "";
@@ -213,6 +238,7 @@ function renderProperties() {
         saveData();
         renderProperties();
         renderAssignForm();
+        renderStats();
         message.textContent = "Najemca odłączony";
       });
       card.appendChild(disengageTenant);
@@ -227,6 +253,7 @@ function renderProperties() {
       saveData();
       renderProperties();
       renderAssignForm();
+      renderStats();
       message.textContent = "Nieruchomość usunięta";
     });
     card.appendChild(deleteButton);
@@ -272,6 +299,7 @@ function renderTenants() {
         saveData();
         renderTenants();
         renderAssignForm();
+        renderStats();
         message.textContent = "Najemca usunięty";
       }
     });
@@ -375,6 +403,7 @@ function assignTenantToProperty() {
   saveData();
   renderProperties();
   renderAssignForm();
+  renderStats();
 
   message.textContent = "Najemca przypisany";
 }
@@ -386,3 +415,4 @@ loadData();
 renderAssignForm();
 renderProperties();
 renderTenants();
+renderStats();
