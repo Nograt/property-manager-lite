@@ -16,7 +16,6 @@ const tenantPhone = document.getElementById("tenantPhone");
 const tenantEmail = document.getElementById("tenantEmail");
 const addTenant = document.getElementById("addTenant");
 
-
 const totalProperties = document.getElementById("totalProperties");
 const occupiedProperties = document.getElementById("occupiedProperties");
 const freeProperties = document.getElementById("freeProperties");
@@ -87,7 +86,6 @@ let properties = [
   },
 ];
 
-
 function saveData() {
   localStorage.setItem("properties", JSON.stringify(properties));
   localStorage.setItem("tenants", JSON.stringify(tenants));
@@ -109,19 +107,19 @@ function loadData() {
 
 function renderStats() {
   const total = properties.length;
-  const occupied = properties.filter(property => property.tenantId !== null).length;
+  const occupied = properties.filter(
+    (property) => property.tenantId !== null,
+  ).length;
   const propertiesFree = total - occupied;
-  const rentSum = properties.reduce((sum,property) =>{
+  const rentSum = properties.reduce((sum, property) => {
     return sum + property.rent;
-  },0);
+  }, 0);
 
   totalProperties.textContent = total;
   occupiedProperties.textContent = occupied;
   freeProperties.textContent = propertiesFree;
   totalRent.textContent = rentSum;
-
 }
-
 
 function addNewTenant() {
   if (tenantName.value.trim() === "") {
@@ -154,9 +152,7 @@ function addNewTenant() {
   renderAssignForm();
   renderStats();
 
-  tenantName.value = "";
-  tenantPhone.value = "";
-  tenantEmail.value = "";
+  clearTenantForm();
 
   message.textContent = "Pomyślnie dodano lokatora";
 }
@@ -195,11 +191,23 @@ function addNewProperty() {
   renderAssignForm();
   renderStats();
 
+  clearPropertyForm();
+
+  message.textContent = "Mieszkanie dodane";
+}
+
+function clearPropertyForm() {
   propertyName.value = "";
   propertyAddress.value = "";
   propertyRent.value = "";
+  propertyName.focus();
+}
 
-  message.textContent = "Mieszkanie dodane";
+function clearTenantForm() {
+  tenantName.value = "";
+  tenantPhone.value = "";
+  tenantEmail.value = "";
+  tenantName.focus();
 }
 
 addProperty.addEventListener("click", addNewProperty);
@@ -224,7 +232,7 @@ function renderProperties() {
     if (property.tenantId === null) {
       tenantInfo.textContent = "Brak najemcy";
     } else {
-      const tenant = tenants.find((tenant) => tenant.id === property.tenantId);
+      const tenant = findTenantById(property.tenantId);
 
       if (tenant) {
         tenantInfo.textContent = `Najemca: ${tenant.name}`;
@@ -267,6 +275,14 @@ function renderProperties() {
   }
 }
 
+function isTenantAssigned(tenantId) {
+  return properties.some((property) => property.tenantId === tenantId);
+}
+
+function findTenantById(tenantId) {
+  return tenants.find((tenant) => tenant.id === tenantId);
+}
+
 function renderTenants() {
   tenantsList.replaceChildren();
 
@@ -285,9 +301,7 @@ function renderTenants() {
     deleteButton.textContent = "Usuń najemcę";
 
     deleteButton.addEventListener("click", () => {
-      const isAssigned = properties.some(
-        (property) => property.tenantId === tenant.id,
-      );
+      const isAssigned = isTenantAssigned(tenant.id);
 
       if (isAssigned) {
         alert("Nie możesz usunąć przypisanego najemcy");
@@ -323,10 +337,8 @@ function renderAssignForm() {
   );
 
   const availableTenants = tenants.filter((tenant) => {
-    const isAsigned = properties.some(
-      (property) => property.tenantId === tenant.id,
-    );
-    return !isAsigned;
+    const isAssigned = isTenantAssigned(tenant.id);
+    return !isAssigned;
   });
 
   let canAssign = true;
