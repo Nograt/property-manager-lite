@@ -6,7 +6,7 @@ The project focuses on data relationships, DOM rendering, localStorage persisten
 
 ## Live Demo
 
-[View live project]([https://twoj-link.github.io/property-manager-lite/](https://targonski.dev/property-manager-lite/))
+[View live project](https://twoj-link.github.io/property-manager-lite/](https://targonski.dev/property-manager-lite/)
 
 ## Features
 
